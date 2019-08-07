@@ -5,7 +5,7 @@ AEX RESTful API 协议说明文档 （V1）
 + [公开数据接口](#请求应答)
    + [获取交易对行情数据](#获取交易对行情数据), [\[错误码\]](#错误码-1)
    + [获取交易对深度数据](#获取指定交易对深度), [\[错误码\]](#错误码-1)
-   + [获取交易对历史成交数据](#获取指定交易对历史成交数据)
+   + [获取交易对历史成交数据](#获取指定交易对历史成交数据), [\[错误码\]](#错误码-1)
 + [用户数据接口]
    + [我的账户余额](), [\[错误码\]()
    + [挂单](), [\[错误码\]]()
@@ -13,37 +13,7 @@ AEX RESTful API 协议说明文档 （V1）
    + [我的挂单](), [\[错误码\]]()
    + [我的成交记录](), [\[错误码\]]()
 
-# 错误码
-错误码 | 说明
------  | ---------
-"[]"      | 系统错误
-"param time should be a timestamp"   | time参数错误，正确的time参数是一个10位整数，单位是秒，不是毫秒
-"param time over 30 seconds"   | time参数跟服务器时间相比偏移超过30秒
-"public key error"   | 公钥格式错误
-"wrong public key"   | 公钥不存在
-"wrong md5 value"   | md5参数错误，跟服务器计算出来的不一致
-"{IP} is not allowed."   | IP不在白名单中
-"system_busy"   | 系统错误
-"input_error1"  | 请求参数错误
-"noOrder"  | mk_type和c参数指定的交易对无效
-"invalid_market_name" | mk_type参数指定的市场无效
-"trade_conf_err" | 系统错误，交易参数配置无效
-"invalid_order_type" | type参数错误，只有1=买单，2=卖单
-"input_error2" |  挂单价格无效
-"sys_amt_precision_err#1" | 系统错误，挂单数量精度配置错误
-"sys_amt_precision_err#2" | 系统错误，挂单数量精度配置错误
-"input_error3" | 挂单数量精度超过配置
-"min" | 挂单数量超过最大限制
-"sml" | 挂单数量少于最小限制
-"lag" | 挂单价格超过最大限制
-"sys_price_precision_conf" | 系统错误，价格精度配置错误
-"sys_price_precision_err#1" | 挂单价格精度超过8位
-"sys_price_precision_err#2" | 挂单价格精度<0
-"deciError2" | 挂单价格精度超过系统配置
-"amountsmall" | 挂单金额少于最小限制: 挂单金额=挂单价格x挂单数量
-"succ" | 当前挂单直接撮合了，没有生成订单
-"succ\|{number}" | 当前挂单部分成交或者完全没有成交，剩余的部分生成了订单，订单ID是number
-"system_busy#8" | 可能已经有部分成交或者完全没成交，剩余的部分生成订单失败
+
 
 
 
@@ -61,7 +31,7 @@ AEX RESTful API 协议说明文档 （V1）
   mk_type | 交易区，比如 cnc
   c       | 币名，比如: c=btc, 获取btc/cnc交易对的行情数据; c=all, 获取cnc交易区下所有有效交易对的行情数据
   
-  应答:（json）
+  正常应答（json）
   ```
   btc/cnc 交易对行情数据：
   {
@@ -104,7 +74,7 @@ AEX RESTful API 协议说明文档 （V1）
     ...
   }  
   ```
-  ### 错误码
+  ### 错误应答(错误码)
   错误码 | 说明
   -----  | ---------
   "input_error1"        | 参数错误
@@ -127,7 +97,7 @@ AEX RESTful API 协议说明文档 （V1）
   c       | 币名，比如: c=btc, 获取btc/cnc交易对的行情数据; c=all, 获取cnc交易区下所有有效交易对的行情数据
   
   
-  应答（json）
+  正常应答（json）
   ```
   {
     "bids":[
@@ -146,13 +116,14 @@ AEX RESTful API 协议说明文档 （V1）
     ]
   }
   ```  
-  ### 错误码
+  ### 错误应答(错误码)
   错误码 | 说明
   -----  | ---------
   "input_error1"        | 参数错误
   "fail#1" | mk_type参数指定的市场无效
   "no_order" | 无效交易对
   "fail#3" | 系统错误
+  
   
 ## 获取交易对历史成交数据   
 
@@ -166,9 +137,9 @@ AEX RESTful API 协议说明文档 （V1）
   -----  | ---------
   mk_type | 交易区，比如 cnc
   c       | 币名，比如: c=btc, 获取btc/cnc交易对的行情数据; c=all, 获取cnc交易区下所有有效交易对的行情数据
-  tid     | 从哪个成交ID开始查询，可选参数，不带这个参数默认从第一条开始查询
+  tid     | 从哪个成交ID开始查询（可选参数，不带这个参数默认从第一条开始查询）
   
-  应答（json）
+  正常应答（json）
   ```
   [
     {
@@ -180,83 +151,77 @@ AEX RESTful API 协议说明文档 （V1）
     },
     ...
   ]  
-  ```  
-  ### 错误码
+  ```   
+  ### 错误应答(错误码)
   错误码 | 说明
   -----  | ---------
   "input_error1"        | 参数错误
   "[]" | mk_type参数指定的市场无效, 或者交易对无效，或者无成交数据
   
-## 获取指定交易对行情数据   
+  
+## 我的账户余额   
 
   请求URL
   ```
-  GET /v2/tickers.php?market={market}&coin={coin}
+  POST /getMyBalance.php
   ```
   请求参数:   
   
   参数名  | 说明
   -----  | ---------
-  market | 交易区，比如 cnc
-  coin   | 币名，比如 btc
+  key  | 公钥
+  time | 发起请求时的Unix时间戳，单位秒，不是毫秒
+  md5  | 鉴权md5，md5=md5("{key}\_{user_id}\_{skey}\_{time}"), user_id是用户登录后的数字ID，不是邮箱账号
   
   
-  应答（json）
+  正常应答（json）
   ```
   {
-    "eno":0,     // 错误码
-    "emsg":"",   // 错误描述
-    "data":[
-      {
-        "market":"cnc",   // 市场
-        "coin":"btc",     // 币名
-        "ticker":{
-          "high":75501,     // 24小时内的最高价
-          "low":72231,      // 24小时内的最低价
-          "last":74654,     // 最近1次成交价
-          "vol":6448.69997, // 24小时成交量
-          "buy":74666,      // 当前买1价
-          "sell":74728,     // 当前卖1价
-          "range":0.0257    // 最新成交价跟24小时之前成交价的波动比例
-        }
-      }
-    ]
+    "btc_balance":"0.00022878",
+    "btc_balance_lock":"0.00000000",
+    "ltc_balance":"0",
+    "ltc_balance_lock":"0",
+    ...
   }
   ```    
-## 获取指定交易对深度   
+  ### 错误应答(错误码)
+  错误码 | 说明
+  -----  | ---------
+  "[]"      | 系统错误
+  "param time should be a timestamp"   | time参数错误，正确的time参数是一个10位整数，单位是秒，不是毫秒
+  "param time over 30 seconds"   | time参数跟服务器时间相比偏移超过30秒
+  "public key error"   | 公钥格式错误
+  "wrong public key"   | 公钥不存在
+  "wrong md5 value"   | md5参数错误，跟服务器计算出来的不一致
+  "{IP} is not allowed."   | IP不在白名单中
+  "fail #4" | 系统错误
+  
+  
+  
+## 挂单   
 
   请求URL
   ```
-  GET /v2/depth.php?market={market}&coin={coin}
+  POST /submitOrder.php
   ```
   请求参数:   
   
   参数名  | 说明
   -----  | ---------
-  market | 交易区，比如 cnc
-  coin   | 币名，比如 btc
+  key  | 公钥
+  time | 发起请求时的Unix时间戳，单位秒，不是毫秒
+  md5  | 鉴权md5，md5=md5("{key}\_{user_id}\_{skey}\_{time}"), user_id是用户登录后的数字ID，不是邮箱账号
+  mk_type | 交易区，比如 cnc
+  coinname | 币名，比如 btc
+  type | 挂单类型: 1=挂买单，2=挂卖单
+  price | 挂单价格
+  amount | 挂单数量
+  tag | 自定义标签，十进制，不超过10位正整数，可以用来关联挂单和成交记录
   
   
-  应答（json）
+  正常应答（json）
   ```
-  {
-    "eno":0,    // 错误码
-    "emsg":"",  // 错误描述
-    "data":{
-      "bids":[
-        [
-          74665,    // 买价
-          0.13298   // 买量
-        ]
-      ],
-      "asks":[
-        [
-          74734,    // 卖价
-          1.198882  // 卖量
-        ]
-      ]
-    }
-  }
+  
   ```    
 ## 获取指定交易对最新成交数据   
 
