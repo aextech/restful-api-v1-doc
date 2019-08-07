@@ -12,6 +12,8 @@ AEX RESTful API 协议说明文档 （V1）
    + [撤单](), [\[错误码\]]()
    + [我的挂单](), [\[错误码\]]()
    + [我的成交记录](), [\[错误码\]]()
+   + [通过Tag查询我的挂单](), [\[错误码\]]()
+   + [通过Tag查询我的成交记录](), [\[错误码\]]()
 
 
 # 请求/应答
@@ -393,4 +395,119 @@ AEX RESTful API 协议说明文档 （V1）
   "no_record" | 没有挂单
 
 
+## 通过Tag查询我的挂单   
+
+  请求URL
+  ```
+  POST /getMyOrdersByTag.php
+  ```
+  请求参数:   
   
+  参数名  | 说明
+  -----  | ---------
+  key  | 公钥
+  time | 发起请求时的Unix时间戳，单位秒，不是毫秒
+  md5  | 鉴权md5，md5=md5("{key}\_{user_id}\_{skey}\_{time}"), user_id是用户登录后的数字ID，不是邮箱账号
+  mk_type | 交易区，比如 cnc
+  coinname | 币名，比如 gat
+  tag | 要查询什么tag的订单，要求tag>=1
+  since_order_id | 从哪个订单ID开始查询（可选），要求since_order_id>=1，不带该参数默认从第一条订单开始查询
+  
+  
+  应答, gat/cnc交易对（json）
+  ```
+  {
+    "mk_type":"cnc",
+    "coin":"gat",
+    "tag":23,
+    "orders":[
+      {
+        "id":3190716,
+        "type":1,
+        "price":0.01535,
+        "amount":755.407687,
+        "time":"2019-08-07 16:10:30"
+      },
+      ...
+    ]
+  }
+  ```      
+  
+  ### 错误应答(错误码)
+  错误码 | 说明
+  -----  | ---------
+  "[]"      | 系统错误
+  "param time should be a timestamp"   | time参数错误，正确的time参数是一个10位整数，单位是秒，不是毫秒
+  "param time over 30 seconds"   | time参数跟服务器时间相比偏移超过30秒
+  "public key error"   | 公钥格式错误
+  "wrong public key"   | 公钥不存在
+  "wrong md5 value"   | md5参数错误，跟服务器计算出来的不一致
+  "{IP} is not allowed."   | IP不在白名单中
+  "input_error1"  | 请求参数错误, 或者交易市场无效
+  "noOrder"  | mk_type和c参数指定的交易对无效
+  "no_record" | 没有挂单
+  "system_busy" | 系统错误
+
+  
+## 通过Tag查询我的成交记录   
+
+  请求URL
+  ```
+  POST /getMyTradesByTag.php
+  ```
+  请求参数:   
+  
+  参数名  | 说明
+  -----  | ---------
+  key  | 公钥
+  time | 发起请求时的Unix时间戳，单位秒，不是毫秒
+  md5  | 鉴权md5，md5=md5("{key}\_{user_id}\_{skey}\_{time}"), user_id是用户登录后的数字ID，不是邮箱账号
+  mk_type | 交易区，比如 cnc
+  coinname | 币名，比如 gat
+  tag | 要查询什么tag的订单，要求tag>=1
+  since_trade_id | 从哪个成交ID开始查询（可选），since_trade_id>=1，不带该参数默认从第一条成交记录开始查询
+  
+  
+  应答, gat/cnc交易对（json）
+  ```
+  {
+    "mk_type":"cnc",
+    "coin":"gat",
+    "tag":25,
+    "trades":[
+      {
+        "id":1423223,
+        "type":1,
+        "price":0.01541,
+        "volume":65.541856,
+        "fee":0.06554185,
+        "time":"2019-08-07 16:24:14"
+      },
+      {
+        "id":1423224,
+        "type":1,
+        "price":0.01541,
+        "volume":686.924594,
+        "fee":0.61922016,
+        "time":"2019-08-07 16:24:14"
+      }
+    ]
+  }
+  ```      
+  
+  ### 错误应答(错误码)
+  错误码 | 说明
+  -----  | ---------
+  "[]"      | 系统错误
+  "param time should be a timestamp"   | time参数错误，正确的time参数是一个10位整数，单位是秒，不是毫秒
+  "param time over 30 seconds"   | time参数跟服务器时间相比偏移超过30秒
+  "public key error"   | 公钥格式错误
+  "wrong public key"   | 公钥不存在
+  "wrong md5 value"   | md5参数错误，跟服务器计算出来的不一致
+  "{IP} is not allowed."   | IP不在白名单中
+  "input_error1"  | 请求参数错误, 或者交易市场无效
+  "noOrder"  | mk_type和c参数指定的交易对无效
+  "system_busy" | 系统错误
+
+
+    
