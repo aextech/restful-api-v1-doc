@@ -218,11 +218,11 @@ AEX RESTful API 协议说明文档 （V1）
   
   正常应答: 下单时完全撮合成交（string）
   ```
-  succ
+  "succ"
   ``` 
   正常应答: 下单时部分撮合成交（string）
   ```
-  succ|{orderId}
+  "succ|{orderId}"
   ``` 
   
   ### 错误应答(错误码)
@@ -258,68 +258,139 @@ AEX RESTful API 协议说明文档 （V1）
   "system_busy#8" | 可能已经有部分成交或者完全没成交，剩余的部分生成订单失败
   
   
-## 获取指定交易对最新成交数据   
+## 撤单   
 
   请求URL
   ```
-  GET /v2/lasttrades.php?market={market}&coin={coin}&limit={limit}
+  POST /cancelOrder.php
   ```
   请求参数:   
   
   参数名  | 说明
   -----  | ---------
-  market | 交易区，比如 cnc
-  coin   | 币名，比如 btc
-  limit  | 查询数量，可选，默认是10，最大为50
+  key  | 公钥
+  time | 发起请求时的Unix时间戳，单位秒，不是毫秒
+  md5  | 鉴权md5，md5=md5("{key}\_{user_id}\_{skey}\_{time}"), user_id是用户登录后的数字ID，不是邮箱账号
+  mk_type | 交易区，比如 cnc
+  coinname | 币名，比如 btc
+  order_id | 订ID
   
   
-  应答（json）
+  正常应答（string）
   ```
-  {
-    "eno":0,    // 错误码
-    "emsg":"",  // 错误描述
-    "data":[
-      {
-        "tradeid":3428804,  // 成交ID
-        "time":1563413853,  // 成交时间，单位秒
-        "type":"buy",       // 成交类型: buy=买, sell=卖
-        "price":40200,      // 成交价
-        "amount":0.004975   // 成交数量
-      }
-    ]
-  }
+  "succ"
   ```      
-## 获取指定交易对历史成交数据   
+  
+  ### 错误应答(错误码)
+  错误码 | 说明
+  -----  | ---------
+  "[]"      | 系统错误
+  "param time should be a timestamp"   | time参数错误，正确的time参数是一个10位整数，单位是秒，不是毫秒
+  "param time over 30 seconds"   | time参数跟服务器时间相比偏移超过30秒
+  "public key error"   | 公钥格式错误
+  "wrong public key"   | 公钥不存在
+  "wrong md5 value"   | md5参数错误，跟服务器计算出来的不一致
+  "{IP} is not allowed."   | IP不在白名单中
+  "input_error1"  | 请求参数错误
+  "invalid_pricing_coin" | mk_type参数指定的市场无效
+  "coinerr"  | mk_type和c参数指定的交易对无效
+  "system_busy#1"   | 系统错误
+  "system_err" | 系统错误
+  "no_record" | 待撤销的订单不存在
+  "failed" | 撤销订单失败
+  
+  
+## 我的挂单   
 
   请求URL
   ```
-  GET /v2/trades.php?market={market}&coin={coin}&fromid={fromTradeID}&limit={limit}
+  POST /getOrderList.php
   ```
   请求参数:   
   
   参数名  | 说明
   -----  | ---------
-  market | 交易区，比如 cnc
-  coin   | 币名，比如 btc
-  fromid | 从哪个交易ID开始查询，结果包含此交易ID
-  limit  | 查询数量，可选，默认是10，最大为50
+  key  | 公钥
+  time | 发起请求时的Unix时间戳，单位秒，不是毫秒
+  md5  | 鉴权md5，md5=md5("{key}\_{user_id}\_{skey}\_{time}"), user_id是用户登录后的数字ID，不是邮箱账号
+  mk_type | 交易区，比如 cnc
+  coinname | 币名，比如 gat
   
   
-  应答（json）
+  应答, gat/cnc交易对（json）
   ```
-  {
-    "eno":0,    // 错误码
-    "emsg":"",  // 错误描述
-    "data":[
-      {
-        "tradeid":3428804,  // 成交ID
-        "time":1563413853,  // 成交时间，单位秒
-        "type":"buy",       // 成交类型: buy=买, sell=卖
-        "price":40200,      // 成交价
-        "amount":0.004975   // 成交数量
-      }
-    ]
-  }
+  [
+    {
+      "id":"3189572",
+      "coinname":"gat",
+      "type":"1",
+      "price":"0.01530000",
+      "amount":"757.87633900",
+      "time":"2019-08-07 15:27:11"
+    }
+  ]
   ```      
   
+  ### 错误应答(错误码)
+  错误码 | 说明
+  -----  | ---------
+  "[]"      | 系统错误
+  "param time should be a timestamp"   | time参数错误，正确的time参数是一个10位整数，单位是秒，不是毫秒
+  "param time over 30 seconds"   | time参数跟服务器时间相比偏移超过30秒
+  "public key error"   | 公钥格式错误
+  "wrong public key"   | 公钥不存在
+  "wrong md5 value"   | md5参数错误，跟服务器计算出来的不一致
+  "{IP} is not allowed."   | IP不在白名单中
+  "input_error1"  | 请求参数错误, 或者交易市场无效
+  "coinerr"  | mk_type和c参数指定的交易对无效
+  "no_record" | 没有挂单
+
+  
+## 我的成交记录   
+
+  请求URL
+  ```
+  POST /getOrderList.php
+  ```
+  请求参数:   
+  
+  参数名  | 说明
+  -----  | ---------
+  key  | 公钥
+  time | 发起请求时的Unix时间戳，单位秒，不是毫秒
+  md5  | 鉴权md5，md5=md5("{key}\_{user_id}\_{skey}\_{time}"), user_id是用户登录后的数字ID，不是邮箱账号
+  mk_type | 交易区，比如 cnc
+  coinname | 币名，比如 gat
+  page | 获取第几页记录（可选参数）, 
+  
+  
+  应答, gat/cnc交易对（json）
+  ```
+  [
+    {
+      "id":"3189572",
+      "coinname":"gat",
+      "type":"1",
+      "price":"0.01530000",
+      "amount":"757.87633900",
+      "time":"2019-08-07 15:27:11"
+    }
+  ]
+  ```      
+  
+  ### 错误应答(错误码)
+  错误码 | 说明
+  -----  | ---------
+  "[]"      | 系统错误
+  "param time should be a timestamp"   | time参数错误，正确的time参数是一个10位整数，单位是秒，不是毫秒
+  "param time over 30 seconds"   | time参数跟服务器时间相比偏移超过30秒
+  "public key error"   | 公钥格式错误
+  "wrong public key"   | 公钥不存在
+  "wrong md5 value"   | md5参数错误，跟服务器计算出来的不一致
+  "{IP} is not allowed."   | IP不在白名单中
+  "input_error1"  | 请求参数错误, 或者交易市场无效
+  "coinerr"  | mk_type和c参数指定的交易对无效
+  "no_record" | 没有挂单
+
+
   
