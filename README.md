@@ -14,9 +14,6 @@ AEX RESTful API 协议说明文档 （V1）
    + [我的成交记录](), [\[错误码\]]()
 
 
-
-
-
 # 请求/应答
 ## 获取交易对行情数据   
 
@@ -216,13 +213,51 @@ AEX RESTful API 协议说明文档 （V1）
   type | 挂单类型: 1=挂买单，2=挂卖单
   price | 挂单价格
   amount | 挂单数量
-  tag | 自定义标签，十进制，不超过10位正整数，可以用来关联挂单和成交记录
+  tag | 自定义标签（可选），十进制，不超过10位正整数，可以用来关联挂单和成交记录
   
   
-  正常应答（json）
+  正常应答: 下单时完全撮合成交（string）
   ```
+  succ
+  ``` 
+  正常应答: 下单时部分撮合成交（string）
+  ```
+  succ|{orderId}
+  ``` 
   
-  ```    
+  ### 错误应答(错误码)
+  错误码 | 说明
+  -----  | ---------
+  "[]"      | 系统错误
+  "param time should be a timestamp"   | time参数错误，正确的time参数是一个10位整数，单位是秒，不是毫秒
+  "param time over 30 seconds"   | time参数跟服务器时间相比偏移超过30秒
+  "public key error"   | 公钥格式错误
+  "wrong public key"   | 公钥不存在
+  "wrong md5 value"   | md5参数错误，跟服务器计算出来的不一致
+  "{IP} is not allowed."   | IP不在白名单中
+  "system_busy"   | 系统错误
+  "input_error1"  | 请求参数错误
+  "noOrder"  | mk_type和c参数指定的交易对无效
+  "invalid_market_name" | mk_type参数指定的市场无效
+  "trade_conf_err" | 系统错误，交易参数配置无效
+  "invalid_order_type" | type参数错误，只有1=买单，2=卖单
+  "input_error2" |  挂单价格无效
+  "sys_amt_precision_err#1" | 系统错误，挂单数量精度配置错误
+  "sys_amt_precision_err#2" | 系统错误，挂单数量精度配置错误
+  "input_error3" | 挂单数量精度超过配置
+  "min" | 挂单数量超过最大限制
+  "sml" | 挂单数量少于最小限制
+  "lag" | 挂单价格超过最大限制
+  "sys_price_precision_conf" | 系统错误，价格精度配置错误
+  "sys_price_precision_err#1" | 挂单价格精度超过8位
+  "sys_price_precision_err#2" | 挂单价格精度<0
+  "deciError2" | 挂单价格精度超过系统配置
+  "amountsmall" | 挂单金额少于最小限制: 挂单金额=挂单价格x挂单数量
+  "succ" | 当前挂单直接撮合了，没有生成订单
+  "succ\|{number}" | 当前挂单部分成交或者完全没有成交，剩余的部分生成了订单，订单ID是number
+  "system_busy#8" | 可能已经有部分成交或者完全没成交，剩余的部分生成订单失败
+  
+  
 ## 获取指定交易对最新成交数据   
 
   请求URL
