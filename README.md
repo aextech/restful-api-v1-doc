@@ -361,7 +361,7 @@ AEX RESTful API 协议说明文档 （V1）
   md5  | 鉴权md5，md5=md5("{key}\_{user_id}\_{skey}\_{time}"), user_id是用户登录后的数字ID，不是邮箱账号
   mk_type | 交易区，比如 cnc
   coinname | 币名，比如 gat
-  page | 获取第几页记录（可选参数）, 
+  page | 获取第几页记录（可选参数）, 不带page参数，服务器默认page是0，即查询第1页的数据
   
   
   应答, gat/cnc交易对（json）
