@@ -14,8 +14,8 @@ AEX RESTful API 协议说明文档 （V1）
    + [8. 我的成交记录](#8-我的成交记录), [\[错误码\]](#错误应答错误码-7)
    + [9. 通过Tag查询我的挂单](#9-通过tag查询我的挂单), [\[错误码\]](#错误应答错误码-8)
    + [10. 通过Tag查询我的成交记录](#10-通过tag查询我的成交记录), [\[错误码\]](#错误应答错误码-9)
-+ [FAQ]()
-   + ["param time should be a timestamp"错误要怎么处理？]()
++ [FAQ](#faq)
+   + ["param time should be a timestamp"错误要怎么处理？](#param-time-should-be-a-timestamp错误要怎么处理)
 
 # 请求/应答
 ## 1. 获取交易对行情数据   
