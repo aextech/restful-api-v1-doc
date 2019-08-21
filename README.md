@@ -216,7 +216,7 @@ AEX RESTful API 协议说明文档 （V1）
   type | 挂单类型: 1=挂买单，2=挂卖单
   price | 挂单价格
   amount | 挂单数量
-  tag | 自定义标签（可选），十进制，不超过10位正整数，可以用来关联挂单和成交记录
+  tag | 自定义标签（可选，默认为0），十进制，不超过10位正整数，可以用来关联挂单和成交记录
   
   
   正常应答: 下单时完全撮合成交（string）
@@ -411,7 +411,7 @@ AEX RESTful API 协议说明文档 （V1）
   md5  | 鉴权md5，md5=md5("{key}\_{user_id}\_{skey}\_{time}"), user_id是用户登录后的数字ID，不是邮箱账号
   mk_type | 交易区，比如 cnc
   coinname | 币名，比如 gat
-  tag | 要查询什么tag的订单，要求tag>=1
+  tag | 要查询什么tag的订单，要求tag>=1，这里的tag是submitOrder.php请求中的tag
   since_order_id | 从哪个订单ID开始查询（可选），要求since_order_id>=1，不带该参数默认从第一条订单开始查询
   
   
@@ -465,7 +465,7 @@ AEX RESTful API 协议说明文档 （V1）
   md5  | 鉴权md5，md5=md5("{key}\_{user_id}\_{skey}\_{time}"), user_id是用户登录后的数字ID，不是邮箱账号
   mk_type | 交易区，比如 cnc
   coinname | 币名，比如 gat
-  tag | 要查询什么tag的订单，要求tag>=1
+  tag | 要查询什么tag的订单，要求tag>=1，这里的tag是submitOrder.php请求中的tag
   since_trade_id | 从哪个成交ID开始查询（可选），since_trade_id>=1，不带该参数默认从第一条成交记录开始查询
   
   
