@@ -4,8 +4,8 @@ AEX RESTful API 协议说明文档 （V1）
 # 目录
 + [公开数据接口](#请求应答)
    + [1. 获取交易对行情数据](#1-获取交易对行情数据), [\[错误码\]](#错误应答错误码)
-   + [2. 获取交易对深度数据](#2-获取指定交易对深度), [\[错误码\]](#错误应答错误码-1)
-   + [3. 获取交易对历史成交数据](#3-获取指定交易对历史成交数据), [\[错误码\]](#错误应答错误码-2)
+   + [2. 获取交易对深度数据](#2-获取交易对深度数据), [\[错误码\]](#错误应答错误码-1)
+   + [3. 获取交易对历史成交数据](#3-获取交易对历史成交数据), [\[错误码\]](#错误应答错误码-2)
 + [用户数据接口](#4-我的账户余额)
    + [4. 我的账户余额](#4-我的账户余额), [\[错误码\]](#错误应答错误码-3)
    + [5. 挂单](#5-挂单), [\[错误码\]](#错误应答错误码-4)
@@ -24,7 +24,7 @@ AEX RESTful API 协议说明文档 （V1）
   ```
   GET /ticker.php?mk_type={market}&c={coin}
   ```
-  例如: <a href="https://api.aex.zone/ticker.php?mk_type=cnc&c=btc" target="_blank">https://api.aex.zone/ticker.php?mk_type=cnc&c=btc</a>
+  例如: https://api.aex.zone/ticker.php?mk_type=cnc&c=btc 
   
   请求参数:   
   
@@ -91,6 +91,8 @@ AEX RESTful API 协议说明文档 （V1）
   ```
   GET /depth.php?mk_type={market}&c={coin}
   ```
+  例如: https://api.aex.zone/depth.php?mk_type=cnc&c=btc 
+  
   请求参数:   
   
   参数名  | 说明
@@ -133,6 +135,8 @@ AEX RESTful API 协议说明文档 （V1）
   ```
   GET /trades.php?mk_type={market}&c={coin}&tid={tradeId}
   ```
+  例如: https://api.aex.zone/trades.php?mk_type=cnc&c=btc 
+  
   请求参数:   
   
   参数名  | 说明
