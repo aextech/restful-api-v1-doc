@@ -24,6 +24,8 @@ AEX RESTful API 协议说明文档 （V1）
   ```
   GET /ticker.php?mk_type={market}&c={coin}
   ```
+  例如: <a href="https://api.aex.zone/ticker.php?mk_type=cnc&c=btc" target="_blank">https://api.aex.zone/ticker.php?mk_type=cnc&c=btc</a>
+  
   请求参数:   
   
   参数名  | 说明
