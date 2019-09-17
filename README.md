@@ -359,7 +359,7 @@ AEX RESTful API 协议说明文档 （V1）
 
   请求URL
   ```
-  POST /getOrderList.php
+  POST /getMyTradeList.php
   ```
   请求参数:   
   
