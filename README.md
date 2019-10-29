@@ -127,7 +127,7 @@ AEX RESTful API 协议说明文档 （V1）
   "fail#1" | mk_type参数指定的市场无效
   "no_order" | 无效交易对
   "fail#3" | 系统错误
-  
+  "using_v3"  | 已经迁移到v3版本 
   
 ## 3. 获取交易对历史成交数据   
 
@@ -265,6 +265,7 @@ AEX RESTful API 协议说明文档 （V1）
   "succ" | 当前挂单直接撮合了，没有生成订单
   "succ\|{number}" | 当前挂单部分成交或者完全没有成交，剩余的部分生成了订单，订单ID是number
   "system_busy#8" | 可能已经有部分成交或者完全没成交，剩余的部分生成订单失败
+  "using_v3"  | 已经迁移到v3版本 
   
   
 ## 6. 撤单   
@@ -307,6 +308,7 @@ AEX RESTful API 协议说明文档 （V1）
   "system_err" | 系统错误
   "no_record" | 待撤销的订单不存在
   "failed" | 撤销订单失败
+  "using_v3"  | 已经迁移到v3版本 
   
   
 ## 7. 我的挂单   
